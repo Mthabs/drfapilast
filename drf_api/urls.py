@@ -32,4 +32,11 @@ urlpatterns = [
     path('', include('comments.urls')),
     path('', include('likes.urls')),
     path('', include('followers.urls')),
+    path('', include('friends.urls')),
+    path('', include('photos.urls')),
+    path('', include('videos.urls')),
+    path('', include('likephotos.urls')),
+    path('', include('likevideos.urls')),
+    path('', include('photocomments.urls')), 
+    path('', include('videocomments.urls')), 
 ]
