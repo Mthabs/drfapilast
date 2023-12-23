@@ -1,14 +1,28 @@
 from rest_framework import serializers
 from django.db import IntegrityError, transaction
 from .models import Friend
+from followers.models import Follower
 
 class FriendSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     friend_name = serializers.ReadOnlyField(source='friend.username')
+    following_id = serializers.SerializerMethodField()
+    followers_count = serializers.ReadOnlyField()
+    following_count = serializers.ReadOnlyField()
 
     class Meta:
         model = Friend
-        fields = ['id', 'owner', 'created_at', 'friend', 'friend_name']
+        fields = ['id', 'owner', 'created_at', 'following_id', 'friend', 'friend_name', 'followers_count', 'following_count']
+
+    def get_following_id(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            following = Follower.objects.filter(
+                owner=user, followed=obj.owner
+            ).first()
+            
+            return following.id if following else None
+        return None
 
     def create(self, validated_data):
         try:
