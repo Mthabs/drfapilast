@@ -6,9 +6,11 @@ from drf_api.permissions import IsOwnerOrReadOnly
 from rest_framework.response import Response
 from .models import Friend
 from .serializers import FriendSerializer
+from rest_framework import status
 
 
 class FriendListCreateView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Friend.objects.annotate(
         followers_count=Count('owner__followed', distinct=True),
         following_count=Count('owner__following', distinct=True)
