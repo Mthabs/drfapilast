@@ -1,3 +1,4 @@
+from rest_framework.views import APIView
 from django.db.models import Count
 from rest_framework import generics, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
@@ -32,6 +33,14 @@ class FriendListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)   
 
+    def get_queryset(self):
+        friend_requests = Friend.objects.filter(friend=self.request.user, status='pending')
+        return friend_requests
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 class FriendUnfriendView(generics.RetrieveDestroyAPIView):
     permission_classes = [IsOwnerOrReadOnly]
@@ -41,3 +50,15 @@ class FriendUnfriendView(generics.RetrieveDestroyAPIView):
     ).order_by('-created_at')
     serializer_class = FriendSerializer
     
+    def perform_destroy(self, instance):
+        if instance.status == 'pending':
+            instance.delete()
+        else:
+            instance.status = 'pending'
+            instance.save()
+
+class FriendRequestsView(APIView):
+    def get(self, request):
+        friend_requests = Friend.objects.filter(friend=request.user, status='pending')
+        serializer = FriendSerializer(friend_requests, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

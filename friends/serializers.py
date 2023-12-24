@@ -9,10 +9,11 @@ class FriendSerializer(serializers.ModelSerializer):
     following_id = serializers.SerializerMethodField()
     followers_count = serializers.ReadOnlyField()
     following_count = serializers.ReadOnlyField()
-
+    status = serializers.ReadOnlyField()
+    
     class Meta:
         model = Friend
-        fields = ['id', 'owner', 'created_at', 'following_id', 'friend', 'friend_name', 'followers_count', 'following_count']
+        fields = ['id', 'owner', 'created_at', 'following_id', 'friend', 'friend_name', 'followers_count', 'following_count', 'status']
 
     def get_following_id(self, obj):
         user = self.context['request'].user

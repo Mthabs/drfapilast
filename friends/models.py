@@ -2,10 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Friend(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+    ]
     owner = models.ForeignKey(User, related_name='friendships', on_delete=models.CASCADE)
     friend = models.ForeignKey(User, related_name='friend', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='accepted')
+    
     class Meta:
         ordering = ['-created_at']
         unique_together = ['owner', 'friend']
