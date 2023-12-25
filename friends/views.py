@@ -10,7 +10,6 @@ from rest_framework import status
 
 
 class FriendListCreateView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Friend.objects.annotate(
         followers_count=Count('owner__followed', distinct=True),
         following_count=Count('owner__following', distinct=True)
