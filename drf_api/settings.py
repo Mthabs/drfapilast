@@ -60,7 +60,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEV' in os.environ
 
-ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOST'), '8000-mthabs-drfapilast-hgrcxmfwc1.us2.codeanyapp.com','drfapilatest-abbc118e21f9.herokuapp.com']
+ALLOWED_HOSTS = [os.environ.get(
+    'ALLOWED_HOST'), '8000-mthabs-drfapilast-hgrcxmfwc1.us2.codeanyapp.com', 'drfapilatest-abbc118e21f9.herokuapp.com']
 
 
 # Application definition
@@ -91,7 +92,7 @@ INSTALLED_APPS = [
     'likes',
     'followers',
     'friends',
-    'photos', 
+    'photos',
     'videos',
     'likephotos',
     'likevideos',
@@ -110,7 +111,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 if 'CLIENT_ORIGIN_DEV' in os.environ:
-    extracted_url = re.match(r'^([^.]+)', os.environ.get('CLIENT_ORIGIN_DEV', ''), re.IGNORECASE).group(0)
+    extracted_url = re.match(
+        r'^([^.]+)', os.environ.get('CLIENT_ORIGIN_DEV', ''), re.IGNORECASE).group(0)
 
     CORS_ALLOWED_ORIGIN_REGEXES = [
         rf"{extracted_url}.(eu|us)\d+\.codeanyapp\.com$",
